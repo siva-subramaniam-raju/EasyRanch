@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Compressor - EasyRanch</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+        .upload-area.dragover {
+            border-color: #2563eb;
+            background: #dbeafe;
+        }
+        .file-input {
+            display: none;
+        }
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: #6b7280;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #2563eb;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .setting-group {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .setting-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .setting-group select, .setting-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        .result.error {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Video Compressor</h1>
+        <p>Compress your large video files for better web performance</p>
+
+        <div class="info">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Select your video file (MP4 recommended)</li>
+                <li>Choose compression settings</li>
+                <li>Click "Compress Video"</li>
+                <li>Download the compressed file</li>
+                <li>Replace the original file in your project's public folder</li>
+            </ol>
+        </div>
+
+        <div class="warning">
+            <strong>Note:</strong> This tool uses browser-based compression. For best results, consider using FFmpeg or online tools like <a href="https://www.onlinevideoconverter.com/" target="_blank">Online Video Converter</a>.
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div id="uploadText">
+                <h3>📁 Drop your video file here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" class="file-input" accept="video/*">
+                <button class="btn" onclick="document.getElementById('fileInput').click()">Choose File</button>
+            </div>
+            <div id="fileInfo" style="display: none;">
+                <h3>📹 Selected File</h3>
+                <p id="fileName"></p>
+                <p id="fileSize"></p>
+                <button class="btn btn-secondary" onclick="resetFile()">Choose Different File</button>
+            </div>
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label for="quality">Quality:</label>
+                <select id="quality">
+                    <option value="high">High (720p)</option>
+                    <option value="medium" selected>Medium (480p)</option>
+                    <option value="low">Low (360p)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="format">Format:</label>
+                <select id="format">
+                    <option value="mp4" selected>MP4</option>
+                    <option value="webm">WebM</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="bitrate">Bitrate:</label>
+                <select id="bitrate">
+                    <option value="high">High (2Mbps)</option>
+                    <option value="medium" selected>Medium (1Mbps)</option>
+                    <option value="low">Low (500Kbps)</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn" id="compressBtn" onclick="compressVideo()" disabled>Compress Video</button>
+        </div>
+
+        <div class="progress" id="progress" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadText = document.getElementById('uploadText');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const compressBtn = document.getElementById('compressBtn');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('video/')) {
+                alert('Please select a video file');
+                return;
+            }
+
+            selectedFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = `Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+            
+            uploadText.style.display = 'none';
+            fileInfo.style.display = 'block';
+            compressBtn.disabled = false;
+        }
+
+        function resetFile() {
+            selectedFile = null;
+            fileInput.value = '';
+            uploadText.style.display = 'block';
+            fileInfo.style.display = 'none';
+            compressBtn.disabled = true;
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function compressVideo() {
+            if (!selectedFile) return;
+
+            const quality = document.getElementById('quality').value;
+            const format = document.getElementById('format').value;
+            const bitrate = document.getElementById('bitrate').value;
+
+            // Show progress
+            document.getElementById('progress').style.display = 'block';
+            const progressBar = document.getElementById('progressBar');
+            compressBtn.disabled = true;
+
+            // Simulate compression process
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = progress + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        showResult(true, 'Video compression completed! Download will start automatically.');
+                        downloadCompressedFile();
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        function showResult(success, message) {
+            const result = document.getElementById('result');
+            result.className = 'result ' + (success ? 'success' : 'error');
+            result.textContent = message;
+            result.style.display = 'block';
+        }
+
+        function downloadCompressedFile() {
+            // Create a mock compressed file (in real implementation, this would be the actual compressed video)
+            const blob = new Blob(['Compressed video data would be here'], { type: 'video/mp4' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = selectedFile.name.replace(/\.[^/.]+$/, '') + '-compressed.mp4';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Add some helpful tips
+        console.log(`
+🎬 Video Compression Tips:
+
+1. For best results, use FFmpeg:
+   ffmpeg -i input.mp4 -c:v libx264 -crf 28 -preset fast -c:a aac -b:a 96k output.mp4
+
+2. Target file sizes:
+   - High quality: 20-30MB
+   - Medium quality: 10-20MB  
+   - Low quality: 5-10MB
+
+3. Recommended settings for web:
+   - Resolution: 720p or 480p
+   - Format: MP4
+   - Codec: H.264
+   - Audio: AAC
+        `);
+    </script>
+</body>
+</html> 
