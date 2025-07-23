@@ -1,38 +1,355 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Video Player Styles */
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+/* Modern Cow Farm Theme Colors */
+:root {
+  --farm-green: #4a7c59;
+  --pasture-green: #6b8e5a;
+  --warm-brown: #8b7355;
+  --earth-brown: #a67c52;
+  --cream: #f5f1eb;
+  --warm-gray: #f8f6f3;
+  --barn-red: #8b4513;
+  --sky-blue: #87ceeb;
 }
 
-.slider::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #3b82f6;
-  cursor: pointer;
-  border: 2px solid #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+body {
+  background: linear-gradient(135deg, #f5f1eb 0%, #e8f5e8 50%, #f0f8f0 100%);
+  background-attachment: fixed;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.slider::-webkit-slider-track {
-  height: 4px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
+/* Custom scrollbar for farm theme */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.slider::-moz-range-track {
-  height: 4px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8b7355;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b8e5a;
+}
+
+/* Farm-themed card backgrounds */
+.farm-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f6f3 100%);
+  border: 1px solid #e8e0d8;
+  box-shadow: 0 4px 6px -1px rgba(139, 115, 85, 0.1), 0 2px 4px -1px rgba(139, 115, 85, 0.06);
+}
+
+/* Pasture green accents */
+.pasture-accent {
+  background: linear-gradient(135deg, #6b8e5a 0%, #4a7c59 100%);
+}
+
+/* Warm earth tones */
+.earth-tone {
+  background: linear-gradient(135deg, #a67c52 0%, #8b7355 100%);
+}
+
+/* Barn wood texture effect */
+.barn-wood {
+  background: linear-gradient(145deg, #8b7355 0%, #a67c52 100%);
+  background-image: 
+    linear-gradient(145deg, #8b7355 0%, #a67c52 100%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.05) 2px,
+      rgba(255, 255, 255, 0.05) 4px
+    );
+}
+
+/* Sky blue accents */
+.sky-accent {
+  background: linear-gradient(135deg, #87ceeb 0%, #5f9ea0 100%);
+}
+
+/* Farm-themed button styles */
+.farm-button {
+  background: linear-gradient(135deg, #4a7c59 0%, #6b8e5a 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.farm-button:hover {
+  background: linear-gradient(135deg, #3d6b4a 0%, #5a7a4a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(74, 124, 89, 0.3);
+}
+
+/* Warm background for main content */
+.main-bg {
+  background: linear-gradient(135deg, #f5f1eb 0%, #f0f8f0 50%, #f8f6f3 100%);
+}
+
+/* Header with farm theme */
+.farm-header {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f6f3 100%);
+  border-bottom: 2px solid #e8e0d8;
+  box-shadow: 0 2px 4px rgba(139, 115, 85, 0.1);
+}
+
+/* Dashboard cards with farm styling */
+.dashboard-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f6f3 100%);
+  border: 1px solid #e8e0d8;
+  box-shadow: 0 4px 6px -1px rgba(139, 115, 85, 0.1), 0 2px 4px -1px rgba(139, 115, 85, 0.06);
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px -1px rgba(139, 115, 85, 0.15), 0 4px 6px -1px rgba(139, 115, 85, 0.1);
+}
+
+/* Farm-themed progress bars */
+.farm-progress {
+  background: linear-gradient(90deg, #6b8e5a 0%, #4a7c59 100%);
+}
+
+/* Warm accent colors for status indicators */
+.status-success {
+  background: linear-gradient(135deg, #6b8e5a 0%, #4a7c59 100%);
+  color: white;
+}
+
+.status-warning {
+  background: linear-gradient(135deg, #d4a574 0%, #b8860b 100%);
+  color: white;
+}
+
+.status-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+/* Farm-themed table styling */
+.farm-table {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f6f3 100%);
+  border: 1px solid #e8e0d8;
+}
+
+.farm-table th {
+  background: linear-gradient(135deg, #f8f6f3 0%, #f0f8f0 100%);
+  border-bottom: 2px solid #e8e0d8;
+}
+
+.farm-table tr:hover {
+  background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+}
+
+/* Modal backdrop with farm theme */
+.farm-modal-backdrop {
+  background: rgba(139, 115, 85, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Farm-themed input fields */
+.farm-input {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f6f3 100%);
+  border: 1px solid #e8e0d8;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.farm-input:focus {
+  outline: none;
+  border-color: #4a7c59;
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+/* Farm-themed dropdowns */
+.farm-dropdown {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f6f3 100%);
+  border: 1px solid #e8e0d8;
+  box-shadow: 0 4px 6px -1px rgba(139, 115, 85, 0.1), 0 2px 4px -1px rgba(139, 115, 85, 0.06);
+}
+
+/* Warm text colors */
+.text-farm-primary {
+  color: #4a7c59;
+}
+
+.text-farm-secondary {
+  color: #6b8e5a;
+}
+
+.text-farm-accent {
+  color: #8b7355;
+}
+
+/* Farm-themed borders */
+.border-farm {
+  border-color: #e8e0d8;
+}
+
+.border-farm-accent {
+  border-color: #4a7c59;
+}
+
+/* Farm-themed shadows */
+.shadow-farm {
+  box-shadow: 0 4px 6px -1px rgba(139, 115, 85, 0.1), 0 2px 4px -1px rgba(139, 115, 85, 0.06);
+}
+
+.shadow-farm-lg {
+  box-shadow: 0 8px 12px -1px rgba(139, 115, 85, 0.15), 0 4px 6px -1px rgba(139, 115, 85, 0.1);
+}
+
+/* Mobile-specific responsive utilities */
+@media (max-width: 640px) {
+  /* Touch-friendly button sizes */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile-optimized spacing */
+  .mobile-padding {
+    padding: 1rem;
+  }
+  
+  /* Mobile-friendly text sizes */
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-text-base {
+    font-size: 1rem;
+  }
+  
+  .mobile-text-lg {
+    font-size: 1.125rem;
+  }
+  
+  /* Mobile-optimized cards */
+  .mobile-card {
+    margin: 0.5rem;
+    border-radius: 0.75rem;
+  }
+  
+  /* Mobile-friendly tables */
+  .mobile-table {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-table th,
+  .mobile-table td {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+/* Tablet-specific responsive utilities */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .tablet-padding {
+    padding: 1.5rem;
+  }
+}
+
+/* Desktop-specific responsive utilities */
+@media (min-width: 1025px) {
+  .desktop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+  
+  .desktop-padding {
+    padding: 2rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .dark-mode {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break {
+    page-break-before: always;
+  }
+}
+
+/* Line clamp utility for text truncation */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Safe area utilities for modern devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
 }

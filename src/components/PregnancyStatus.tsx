@@ -1,102 +1,153 @@
 import React from 'react';
-import { Calendar, TrendingUp } from 'lucide-react';
-import { CowData } from '../types';
+import { Calendar, CheckCircle2, Heart, Clock, TrendingUp } from 'lucide-react';
 
-interface PregnancyStatusProps {
-  cows: CowData[];
+interface PregnancyStatusItem {
+  id: string;
+  cowId: string;
+  cowName: string;
+  status: 'pregnant' | 'heat' | 'inseminated' | 'open';
+  daysInCycle: number;
+  confidence: number;
+  lastInsemination?: string;
+  expectedCalving?: string;
 }
 
-const PregnancyStatus: React.FC<PregnancyStatusProps> = ({ cows }) => {
-  const pregnantCows = cows.filter(cow => cow.pregnancyStatus.isPregnant).slice(0, 4);
+const PregnancyStatus: React.FC = () => {
+  const pregnancyData: PregnancyStatusItem[] = [
+    {
+      id: '1',
+      cowId: 'C001',
+      cowName: 'Cow C001',
+      status: 'pregnant',
+      daysInCycle: 45,
+      confidence: 95,
+      lastInsemination: '2024-01-15',
+      expectedCalving: '2024-10-23'
+    },
+    {
+      id: '2',
+      cowId: 'C023',
+      cowName: 'Cow C023',
+      status: 'heat',
+      daysInCycle: 21,
+      confidence: 88
+    },
+    {
+      id: '3',
+      cowId: 'C045',
+      cowName: 'Cow C045',
+      status: 'inseminated',
+      daysInCycle: 3,
+      confidence: 92,
+      lastInsemination: '2024-02-28'
+    },
+    {
+      id: '4',
+      cowId: 'C067',
+      cowName: 'Cow C067',
+      status: 'open',
+      daysInCycle: 35,
+      confidence: 78
+    }
+  ];
 
-  const getStatusColor = (confidence: number) => {
-    if (confidence >= 90) return 'text-green-600';
-    if (confidence >= 70) return 'text-blue-600';
-    if (confidence >= 50) return 'text-yellow-600';
-    return 'text-red-600';
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pregnant':
+        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
+      case 'heat':
+        return <Heart className="w-4 h-4 text-red-500" />;
+      case 'inseminated':
+        return <Clock className="w-4 h-4 text-blue-500" />;
+      default:
+        return <TrendingUp className="w-4 h-4 text-gray-500" />;
+    }
   };
 
-  const getStatusBadge = (confidence: number) => {
-    if (confidence >= 90) return { text: 'Pregnant', class: 'bg-green-100 text-green-800' };
-    if (confidence >= 70) return { text: 'Heat', class: 'bg-red-100 text-red-800' };
-    if (confidence >= 50) return { text: 'Inseminated', class: 'bg-blue-100 text-blue-800' };
-    return { text: 'Open', class: 'bg-gray-100 text-gray-800' };
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'pregnant':
+        return 'text-green-700 bg-green-100';
+      case 'heat':
+        return 'text-red-700 bg-red-100';
+      case 'inseminated':
+        return 'text-blue-700 bg-blue-100';
+      default:
+        return 'text-gray-700 bg-gray-100';
+    }
   };
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return 'N/A';
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit' 
-    });
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'pregnant':
+        return 'Pregnant';
+      case 'heat':
+        return 'Heat';
+      case 'inseminated':
+        return 'Inseminated';
+      default:
+        return 'Open';
+    }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="dashboard-card p-6">
+      <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">Pregnancy Status</h2>
-        <Calendar className="w-5 h-5 text-gray-400" />
+        <Calendar className="dashboard-icon" />
       </div>
-
+      
       <div className="space-y-4">
-        {pregnantCows.map((cow) => {
-          const badge = getStatusBadge(cow.pregnancyStatus.confidence);
-          return (
-            <div key={cow.id} className="border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-gray-900">{cow.id}</span>
-                  <span className={`text-xs font-medium px-2 py-1 rounded-full ${badge.class}`}>
-                    {badge.text}
-                  </span>
-                </div>
-                <TrendingUp className="w-4 h-4 text-gray-400" />
+        {pregnancyData.map((cow) => (
+          <div key={cow.id} className={`pregnancy-card ${cow.status}`}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                {getStatusIcon(cow.status)}
+                <span className="font-medium text-gray-900">{cow.cowName}</span>
               </div>
-
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Days in cycle</span>
-                  <div className="font-medium text-gray-900">{cow.pregnancyStatus.daysInCycle}</div>
-                </div>
-                <div>
-                  <span className="text-gray-500">Confidence</span>
-                  <div className={`font-medium ${getStatusColor(cow.pregnancyStatus.confidence)}`}>
-                    {cow.pregnancyStatus.confidence}%
-                  </div>
-                </div>
+              <span className={`status-badge ${cow.status}`}>
+                {getStatusText(cow.status)}
+              </span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500">Days in cycle</p>
+                <p className="font-medium">{cow.daysInCycle}</p>
               </div>
-
-              <div className="mt-3">
-                <span className="text-gray-500 text-sm">Last insemination</span>
-                <div className="font-medium text-gray-900">
-                  {formatDate(cow.pregnancyStatus.breedingDate)}
-                </div>
-              </div>
-
-              {cow.pregnancyStatus.expectedDueDate && (
-                <div className="mt-2">
-                  <span className="text-gray-500 text-sm">Expected calving</span>
-                  <div className="font-medium text-gray-900">
-                    {formatDate(cow.pregnancyStatus.expectedDueDate)}
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-3">
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${cow.pregnancyStatus.confidence}%` }}
-                  />
-                </div>
+              <div>
+                <p className="text-gray-500">Confidence</p>
+                <p className="font-medium">{cow.confidence}%</p>
               </div>
             </div>
-          );
-        })}
+            
+            {cow.lastInsemination && (
+              <div className="mt-3 text-sm">
+                <p className="text-gray-500">Last insemination</p>
+                <p className="font-medium">{cow.lastInsemination}</p>
+              </div>
+            )}
+            
+            {cow.expectedCalving && (
+              <div className="mt-3 text-sm">
+                <p className="text-gray-500">Expected calving</p>
+                <p className="font-medium text-green-600">{cow.expectedCalving}</p>
+              </div>
+            )}
+            
+            <div className="mt-3">
+              <div className="progress-bar">
+                <div 
+                  className={`progress-fill ${cow.status}`}
+                  style={{ width: `${cow.confidence}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default PregnancyStatus;
+export default PregnancyStatus; 

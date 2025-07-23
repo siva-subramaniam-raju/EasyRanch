@@ -1,196 +1,98 @@
-// Core data types for the farm management dashboard
-
-export interface CowData {
+// Cow-related types
+export interface Cow {
   id: string;
-  name?: string;
-  breed: 'Holstein' | 'Jersey' | 'Angus' | 'Hereford' | 'Simmental';
-  age: number; // in months
-  weight: number; // in kg
-  healthStatus: 'healthy' | 'attention' | 'sick' | 'critical';
-  pregnancyStatus: {
-    isPregnant: boolean;
-    confidence: number; // percentage 0-100
-    daysInCycle: number;
-    expectedDueDate?: Date;
-    breedingDate?: Date;
-    gestationDays?: number;
-  };
-  location: {
-    x: number; // barn coordinates
-    y: number;
-    zone: 'feeding' | 'resting' | 'walkway' | 'milking' | 'medical';
-  };
-  lastActivity: Date;
-  lastCheckup: Date;
-  vitals: {
-    temperature: number; // celsius
-    heartRate: number; // bpm
-    rumination: number; // minutes per hour
-    activity: number; // steps per hour
-  };
-  behavior: {
-    activity: number; // 0-100 scale
-    movement: number;
-    resting: number;
-    social: number;
-    feeding: number;
-    vocalization: number;
-    heat: number;
-  };
-  alerts: string[]; // array of alert IDs
+  name: string;
+  age: number;
+  breed: CowBreed;
+  healthScore: number;
+  activityLevel: ActivityLevel;
+  temperature: number;
+  lastCheckup: string;
+  reproductiveStatus: ReproductiveStatus;
+  image?: string;
 }
 
-export interface AlertData {
-  id: string;
-  cowId: string;
-  type: 'health' | 'pregnancy' | 'behavior' | 'location' | 'feeding' | 'temperature';
-  priority: 'low' | 'medium' | 'high' | 'critical';
+export type CowBreed = 'Holstein' | 'Jersey' | 'Guernsey' | 'Ayrshire' | 'Brown Swiss';
+
+export type ActivityLevel = 'low' | 'normal' | 'high';
+
+export type ReproductiveStatus = 'Open' | 'Heat' | 'Inseminated' | 'Pregnant' | 'Dry';
+
+// Alert types
+export interface Alert {
+  id: number;
   title: string;
+  message: string;
+  time: string;
+  type: AlertType;
+  cowId?: string;
+  severity: AlertSeverity;
+}
+
+export type AlertType = 'health' | 'system' | 'breeding' | 'maintenance';
+
+export type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
+
+// Activity types
+export interface Activity {
+  id: string;
+  type: ActivityType;
   description: string;
-  timestamp: Date;
-  resolved: boolean;
-  resolvedBy?: string;
-  resolvedAt?: Date;
-  actionRequired: boolean;
-  estimatedResolutionTime?: number; // minutes
+  timestamp: string;
+  cowId?: string;
+  cowName?: string;
+  severity?: AlertSeverity;
 }
 
-export interface ActivityData {
+export type ActivityType = 'health_check' | 'feeding' | 'milking' | 'breeding' | 'alert' | 'maintenance';
+
+// Component props
+export interface CowProfilesProps {
+  onCowSelect?: (cowId: string) => void;
+}
+
+// Notification types
+export interface Notification {
+  id: number;
+  title: string;
+  message: string;
+  time: string;
+  type: AlertType;
+}
+
+// Barn and sensor types
+export interface BarnZone {
   id: string;
-  cowId: string;
-  timestamp: Date;
-  activityType: 'eating' | 'resting' | 'walking' | 'drinking' | 'socializing' | 'ruminating';
-  duration: number; // minutes
-  location: {
-    x: number;
-    y: number;
-    zone: string;
-  };
-  intensity: number; // 0-100
-  heartRate?: number;
-  temperature?: number;
+  name: string;
+  temperature: number;
+  humidity: number;
+  occupancy: number;
+  status: 'normal' | 'warning' | 'alert';
 }
 
-export interface DailyTrendsData {
-  date: Date;
-  hour: number; // 0-23
-  metrics: {
-    averageActivity: number;
-    peakActivity: number;
-    averageRumination: number;
-    averageTemperature: number;
-    peakTemperature: number;
-    cowsActive: number;
-    totalCows: number;
-  };
+export interface SensorData {
+  id: string;
+  type: 'temperature' | 'humidity' | 'motion' | 'weight';
+  value: number;
+  unit: string;
+  timestamp: string;
+  status: 'active' | 'inactive' | 'error';
 }
 
-export interface BarnLayoutData {
-  zones: {
-    id: string;
-    type: 'feeding' | 'resting' | 'walkway' | 'milking' | 'medical';
-    coordinates: { x: number; y: number }[];
-    capacity: number;
-    currentOccupancy: number;
-    temperature?: number;
-    humidity?: number;
-  }[];
-  dimensions: {
-    width: number;
-    height: number;
-    scale: number; // meters per unit
-  };
-  equipment: {
-    id: string;
-    type: 'feeder' | 'water' | 'camera' | 'sensor';
-    position: { x: number; y: number };
-    status: 'active' | 'inactive' | 'maintenance';
-  }[];
-}
-
-export interface PregnancyDistributionData {
-  breed: string;
-  pregnant: number;
-  notPregnant: number;
-  uncertain: number;
-  total: number;
-  averageConfidence: number;
-}
-
-export interface BehavioralIndicatorData {
-  category: 'pregnant' | 'nonPregnant';
-  metrics: {
-    activity: number;
-    movement: number;
-    resting: number;
-    social: number;
-    feeding: number;
-  };
-}
-
+// KPI types
 export interface KPIMetrics {
-  totalCows: number;
-  healthyCows: number;
-  pregnantCows: number;
-  alertsCount: number;
-  averageActivity: number;
-  pregnancyRate: number;
-  healthRate: number;
-  averageTemperature: number;
-  changes: {
-    totalCows: number;
-    healthyCows: number;
-    pregnantCows: number;
-    alertsCount: number;
-    averageActivity: number;
-    pregnancyRate: number;
-    healthRate: number;
-    averageTemperature: number;
-  };
+  milkProduction: number;
+  healthScore: number;
+  breedingSuccess: number;
+  feedEfficiency: number;
 }
 
-export interface RealTimeActivityItem {
-  id: string;
+// Behavioral trends
+export interface BehavioralTrend {
   cowId: string;
   cowName: string;
-  activityType: string;
-  timestamp: Date;
-  duration?: number;
-  location?: string;
-  status: 'ongoing' | 'completed';
-  priority?: 'normal' | 'attention';
-}
-
-export interface TimeRange {
-  start: Date;
-  end: Date;
-  label: string;
-}
-
-export interface FilterOptions {
-  breeds: string[];
-  healthStatus: string[];
-  pregnancyStatus: string[];
-  zones: string[];
-  dateRange: TimeRange;
-}
-
-// Chart data types
-export interface ChartDataPoint {
-  label: string;
-  value: number;
-  color?: string;
-  metadata?: any;
-}
-
-export interface ChartConfig {
-  type: 'bar' | 'line' | 'radar' | 'doughnut' | 'progress';
-  title: string;
-  datasets: {
-    label: string;
-    data: ChartDataPoint[];
-    backgroundColor?: string | string[];
-    borderColor?: string | string[];
-  }[];
-  options?: any;
-}
+  trend: 'improving' | 'declining' | 'stable';
+  metric: string;
+  change: number;
+  period: string;
+} 
